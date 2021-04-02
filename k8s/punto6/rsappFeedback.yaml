@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: api-feedback
+  labels:
+    app: api-feedback
+    tier: feedback
+  namespace: name1
+spec:
+  replicas: 2 # el comando rollout funciona con rs pero no con rc
+  selector: #esta feature hace la diferencia con los RC (replication controller)
+    #pueden usar cualquier criterio de busq de pods
+    matchLabels: 
+      tier: feedback
+  # especificacion del pod
+  template:
+    metadata:
+      labels:
+        tier: feedback
+    spec:
+      containers:
+      - image: gcr.io/mitocode-304321/api-feedback:latest
+        name: feedback
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      #restartPolicy: Always
+        env:
+        - name: host
+          valueFrom:
+            configMapKeyRef:
+              name: datos-mysql
+              key: hostbd
+        - name: port
+          valueFrom:
+            configMapKeyRef:
+              name: datos-mysql
+              key: portbd
+        - name: database
+          valueFrom:
+            configMapKeyRef:
+              name: datos-mysql
+              key: namebd
+        - name: password
+          valueFrom:
+            configMapKeyRef:
+              name: datos-mysql
+              key: passbd
+        - name: username
+          valueFrom:
+            configMapKeyRef:
+              name: datos-mysql
+              key: userbd
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "10m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+      restartPolicy: Always

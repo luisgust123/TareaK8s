@@ -1,0 +1,2 @@
+kubectl create namespace name1
+kubectl create namespace name2

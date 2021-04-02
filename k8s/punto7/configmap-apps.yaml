@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-app
+  namespace: name2
+data:
+  hostbd: "mysql-0.mysql.name2.svc.cluster.local"
+  portbd: "3306"

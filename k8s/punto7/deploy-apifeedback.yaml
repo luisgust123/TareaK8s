@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-feedback
+  labels:
+    app: api-feedback
+    version: v1
+  namespace: name2
+spec:
+  selector: #permite seleccionar un conjunto de objetos que cumplan las condiciones
+    matchLabels:
+      app: api-feedback
+      version: v1
+  replicas: 4 #replicaset
+  strategy:
+    type: RollingUpdate # otro valor ->  Recreate (evita que el controlador actualice de forma automática)
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template: # Plantilla que define los containers
+    metadata:
+      labels:
+        app: api-feedback
+        version: v1
+    spec:
+      containers:
+        - name: api-feedback 
+          image: gcr.io/mitocode-304321/api-feedback:latest
+          ports:
+              - containerPort: 8080
+          env:
+          - name: host
+            valueFrom:
+              configMapKeyRef:
+                name: config-app
+                key: hostbd
+          - name: port
+            valueFrom:
+              configMapKeyRef:
+                name: config-app
+                key: portbd
+          - name: database
+            valueFrom:
+              secretKeyRef:
+                name: secrets-app
+                key: namebd
+          - name: password
+            valueFrom:
+              secretKeyRef:
+                name: secrets-app
+                key: passbd
+          - name: username
+            valueFrom:
+              secretKeyRef:
+                name: secrets-app
+                key: userbd
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datos-mysql
+  namespace: name1
+data:
+  namebd: "geoserviciosbd"
+  passbd: "12345678"
+  userbd: "app"
+  hostbd: "mysql"
+  portbd: "3306"

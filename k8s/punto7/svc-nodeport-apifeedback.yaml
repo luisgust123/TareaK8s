@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-feedback-ndp
+  namespace: name2
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: api-feedback
+  type: NodePort #Ingress nativo necesita un svc tipo NodePort
